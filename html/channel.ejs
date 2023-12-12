@@ -1,0 +1,25 @@
+<h3><%= videos.channelName %></h3>
+<br>
+<form action="/download" method="post">
+<table width="100%" border="1">
+    <tr bgcolor="grey">
+        <td><b>Uploaded</b></td><td><b>Thumbnail</b></td><td><b>Title</b></td><td><b>Downloaded</b></td>
+    </tr>
+    <%
+    videos.forEach(video => {
+    %>
+    <tr>
+        <td><font size=2><b><%= video.publishedText %></b></font></td>
+        <td><img src="/thumbnails/<%= video.videoId %>.jpg" width="120px" height="90px"></td>
+        <td width="500px"><font size=2><b><%= video.title %></b></font></td>
+        <td><%= (video.formats)?video.formats.join(","):'' %></td>
+    </tr>
+    <% }); %>
+</table>
+<% if (begin > 0) { 
+    let newBegin = (begin < perPage) ? 0 : begin - perPage;
+%>
+<a href="/channel?id=<%= channelId %>&begin=<%= newBegin %>">Previous page</a>
+<% } %>
+<a href="/channel?id=<%= channelId %>&begin=<%= begin + perPage %>">Next page</a>
+</form>
