@@ -4,6 +4,7 @@ const home = require('./lib/home');
 const addChannel = require('./lib/addChannel');
 const channelPage = require('./lib/channel');
 const thumbnail = require('./lib/thumbnail');
+const download = require('./lib/download');
 const util = require('./lib/util');
 const LegacyPage = require('legacyweb-pages');
 const fs = require('fs');
@@ -17,6 +18,12 @@ const homeDir = process.env.HOME || process.env.HOMEPATH;
 const schema = joi.object({
     VIDEO_ROOT: joi.string().default(path.join(homeDir, '.legacyvid'))
 });
+
+if (process.env.HTTP_PROXY) {
+    process.env.GLOBAL_AGENT_HTTP_PROXY=process.env.HTTP_PROXY;
+    const {bootstrap} = require('global-agent');
+    bootstrap();
+}
 
 const envVars = joi.attempt(process.env, schema, {allowUnknown: true, stripUnknown: true});
 util.initDir(envVars.VIDEO_ROOT);
@@ -37,6 +44,9 @@ const videoPage = new LegacyPage(
 
 util.genLinks(envVars.VIDEO_ROOT, videoPage);
 
+// Active downloads object
+videoPage.activeDownloads = {};
+
 videoPage.addPage({
    path: '/addChannel',
    gen: addChannel(envVars.VIDEO_ROOT, videoPage),
@@ -55,6 +65,9 @@ videoPage.addPage({
 
 // Add thumbnail proxy
 videoPage.app.get('/thumbnails/:vidId', thumbnail);
+
+// Add download function
+videoPage.app.post('/download', express.json(), express.urlencoded(), download(videoPage, envVars.VIDEO_ROOT));
 
 videoPage.setHeader(headerText);
 videoPage.start();

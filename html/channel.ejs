@@ -11,7 +11,7 @@ function toggle(source) {
 </script>
 <table width="100%" border="1">
     <tr bgcolor="grey">
-        <td><font size=2><b>Uploaded</b></font></td><td><font size=2><b>Thumbnail</b></td><td><font size=2><b>Title</b></font></td><td><font size=2><b>Downloaded</b></td><td><b><input type="checkbox" onClick="toggle(this)" /></td>
+        <td><font size=2><b>Uploaded</b></font></td><td><font size=2><b>Thumbnail</b></td><td><font size=2><b>Title</b></font></td><td><font size=2><b>Downloaded</b></td><td><font size=2><b>Progress</b></td><td><b><input type="checkbox" onClick="toggle(this)" /></td>
     </tr>
     <%
     videos.forEach(video => {
@@ -21,6 +21,7 @@ function toggle(source) {
         <td><img src="/thumbnails/<%= video.videoId %>.jpg" width="120px" height="90px"></td>
         <td width="500px"><font size=2><b><%= video.title %></b></font></td>
         <td><%= (video.formats)?video.formats.join(","):'' %></td>
+        <td><%= (video.progress)?`${video.progress}%`:'' %></td>
         <td><input type="checkbox" id="<%= video.videoId %>" name="download" value="<%= video.videoId %>"></td>
     </tr>
     <% }); %>
@@ -35,6 +36,8 @@ function toggle(source) {
             <% } %>
         </td>
         <td width="33%" align="center">
+            <input type="hidden" id="redirectUrl", name="redirectUrl" value="/channel?id=<%= channelId %>&begin=<%= begin %>">
+            <input type="hidden" id="channelId", name="channelId" value="<%= channelId %>">
             <select name="format" id="format">
                 <option value="mp3">MP3</option>
                 <option value="m4v">M4V</option>

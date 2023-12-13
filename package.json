@@ -19,6 +19,7 @@
   "dependencies": {
     "body-parser": "^1.20.2",
     "ejs": "^3.1.9",
+    "global-agent": "^3.0.0",
     "https-proxy-agent": "^7.0.2",
     "i": "^0.3.7",
     "install": "^0.13.0",
@@ -26,7 +27,8 @@
     "legacyweb-pages": "^1.0.2",
     "node-fetch": "^2.7.0",
     "npm": "^10.2.5",
-    "yt-channel-info": "^3.2.1"
+    "yt-channel-info": "^3.2.1",
+    "ytdl": "^1.4.1"
   },
   "devDependencies": {
     "ejs-lint": "^2.0.0"
