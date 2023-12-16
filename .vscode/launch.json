@@ -13,7 +13,9 @@
             ],
             "env": {
                 "HTTP_PROXY": "http://10.11.1.29:30128",
-                "NODE_TLS_REJECT_UNAUTHORIZED": "0"
+                "NODE_TLS_REJECT_UNAUTHORIZED": "0",
+                "FFMPEG_BIN": "C:\\ffmpeg\\bin\\ffmpeg.exe",
+                "DEBUG": "y"
             },
             "program": "${workspaceFolder}\\app.js"
         }
