@@ -5,13 +5,14 @@ const addChannel = require('./lib/addChannel');
 const channelPage = require('./lib/channel');
 const thumbnail = require('./lib/thumbnail');
 const download = require('./lib/download');
+const video = require('./lib/video');
+const view = require('./lib/view');
 const util = require('./lib/util');
 const LegacyPage = require('legacyweb-pages');
 const fs = require('fs');
 const path = require('path');
 const joi = require('joi');
 const express = require('express');
-const bodyParser = require('body-parser');
 
 // Get home directory for videos
 const homeDir = process.env.HOME || process.env.HOMEPATH;
@@ -50,7 +51,7 @@ videoPage.activeDownloads = {};
 videoPage.addPage({
    path: '/addChannel',
    gen: addChannel(envVars.VIDEO_ROOT, videoPage),
-   title: 'Add Channel',
+   title: 'Legacyweb - Add Channel',
    method: 'post',
    middleware: [express.json(), express.urlencoded()]
 });
@@ -58,7 +59,7 @@ videoPage.addPage({
 videoPage.addPage({
     path: '/channel',
     gen: channelPage(videoPage, envVars.VIDEO_ROOT),
-    title: 'Channel Videos',
+    title: 'Legacyweb - Channel Videos',
     method: 'get',
     middleware: [express.json(), express.urlencoded()]
 });
@@ -66,8 +67,20 @@ videoPage.addPage({
 // Add thumbnail proxy
 videoPage.app.get('/thumbnails/:vidId', thumbnail);
 
+// Add video embed
+videoPage.app.get('/view', express.json(), express.urlencoded(), video(envVars.VIDEO_ROOT, videoPage));
+
 // Add download function
 videoPage.app.post('/download', express.json(), express.urlencoded(), download(videoPage, envVars.VIDEO_ROOT));
+
+// Add view page
+videoPage.addPage({
+    path: '/watch/:channelId/:format/:vidId',
+    gen: view,
+    title: 'LegacyWeb - Watch',
+    method: 'get',
+    middleware: [express.json(), express.urlencoded()]
+})
 
 videoPage.setHeader(headerText);
 videoPage.start();
