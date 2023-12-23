@@ -6,6 +6,8 @@ RUN apk update && \
 WORKDIR /app
 COPY . .
 
+RUN npm i
+
 EXPOSE 3000
 
 ARG VERSION
